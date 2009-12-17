@@ -4,6 +4,10 @@ This module will help install and configure postfix.
 
 A couple of classes will preconfigure postfix for common needs.
 
+Config
+------
+- set $postfix_amavis="true" to include postfix::amavis
+
 == Example:
 
   include postfix

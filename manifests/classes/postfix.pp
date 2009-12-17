@@ -41,6 +41,13 @@ class postfix {
     "":   { $root_mail_recipient = "nobody" }
   }
 
+  case $postfix_amavis {
+    "":		{ $postfix_amavis = "false" }
+    "true":	{ include postfix::amavis }
+  }
+
+  
+
 
   package { ["postfix", "mailx"]:
     ensure => installed
@@ -81,7 +88,7 @@ class postfix {
     mode => "0644",
     content => $operatingsystem ? {
       Redhat => template("postfix/master.cf.redhat5.erb"),
-      Debian => template("postfix/master.cf.debian-etch.erb"),
+      Debian,Ubuntu => template("postfix/master.cf.debian-etch.erb"),
     },
     seltype => $postfix_seltype,
     notify  => Service["postfix"],
