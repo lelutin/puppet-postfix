@@ -83,7 +83,7 @@ class postfix {
     content => $operatingsystem ? {
       Redhat => template("postfix/master.cf.redhat5.erb"),
       CentOS => template("postfix/master.cf.redhat5.erb"),
-      Debian => template("postfix/master.cf.debian-etch.erb"),
+      Debian => template("postfix/master.cf.debian-$lsbdistcodename.erb"),
       Ubuntu => template("postfix/master.cf.debian-etch.erb"),
     },
     seltype => $postfix_seltype,
