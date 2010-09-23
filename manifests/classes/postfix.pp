@@ -121,8 +121,7 @@ class postfix {
     }
   }
 
-  mailalias {"root":
+  postfix::mailalias {"root":
     recipient => $root_mail_recipient,
-    notify    => Exec["newaliases"],
   }
 }
