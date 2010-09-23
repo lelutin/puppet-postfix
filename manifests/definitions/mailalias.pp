@@ -23,7 +23,7 @@ Example usage:
   }
 
 */
-define mailalias ($ensure = 'present', $recipient) {
+define postfix::mailalias ($ensure = 'present', $recipient) {
     mailalias { "${name}":
         ensure => $ensure,
         recipient => $recipient,
