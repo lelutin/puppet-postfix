@@ -79,3 +79,7 @@ ifmail    unix  -       n       n       -       -       pipe
   flags=F user=ftn argv=/usr/lib/ifmail/ifmail -r $nexthop ($recipient)
 bsmtp     unix  -       n       n       -       -       pipe
   flags=Fq. user=foo argv=/usr/local/sbin/bsmtp -f $sender $nexthop $recipient
+
+<%- unless postfix_mastercf_tail.to_s.empty? then -%>
+<%= postfix_mastercf_tail %>
+<%- end -%>

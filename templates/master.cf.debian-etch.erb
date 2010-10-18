@@ -108,3 +108,7 @@ sympa        unix  -       n       n       -       -       pipe
 sympabounce  unix  -       n       n       -       -       pipe
   flags=R user=sympa argv=/usr/lib/sympa/bin/bouncequeue ${user}
 <% end %>
+
+<%- unless postfix_mastercf_tail.to_s.empty? then -%>
+<%= postfix_mastercf_tail %>
+<%- end -%>
