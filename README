@@ -6,7 +6,7 @@ A couple of classes will preconfigure postfix for common needs.
 
 Config
 ------
-- set $postfix_amavis="true" to include postfix::amavis
+- set $postfix_use_amavisd="true" to include postfix::amavis
 
 == Example:
 
