@@ -20,7 +20,7 @@ class postfix {
   # selinux labels differ from one distribution to another
   case $operatingsystem {
 
-    RedHat: {
+    RedHat, CentOS: {
       case $lsbmajdistrelease {
         "4":     { $postfix_seltype = "etc_t" }
         "5":     { $postfix_seltype = "postfix_etc_t" }
@@ -34,8 +34,8 @@ class postfix {
   }
 
   # Default value for various options
-  case $postfix_ng_smtp_listen {
-    "": { $postfix_ng_smtp_listen = "127.0.0.1" }
+  case $postfix_smtp_listen {
+    "": { $postfix_smtp_listen = "127.0.0.1" }
   }
   case $root_mail_recipient {
     "":   { $root_mail_recipient = "nobody" }
@@ -85,10 +85,13 @@ class postfix {
   file { "/etc/postfix/master.cf":
     ensure  => present,
     owner => "root",
+    group => "root",
     mode => "0644",
     content => $operatingsystem ? {
       Redhat => template("postfix/master.cf.redhat5.erb"),
-      Debian,Ubuntu => template("postfix/master.cf.debian-etch.erb"),
+      CentOS => template("postfix/master.cf.redhat5.erb"),
+      Debian => template("postfix/master.cf.debian-etch.erb"),
+      Ubuntu => template("postfix/master.cf.debian-etch.erb"),
     },
     seltype => $postfix_seltype,
     notify  => Service["postfix"],
@@ -99,8 +102,9 @@ class postfix {
   file { "/etc/postfix/main.cf":
     ensure  => present,
     owner => "root",
+    group => "root",
     mode => "0644",
-    source  => "puppet:///postfix/main.cf",
+    source  => "puppet:///modules/postfix/main.cf",
     replace => false,
     seltype => $postfix_seltype,
     notify  => Service["postfix"],
@@ -115,7 +119,7 @@ class postfix {
   }
 
   case $operatingsystem {
-    RedHat: {
+    RedHat, CentOS: {
       postfix::config {
         "sendmail_path": value => "/usr/sbin/sendmail.postfix";
         "newaliases_path": value => "/usr/bin/newaliases.postfix";
@@ -124,8 +128,7 @@ class postfix {
     }
   }
 
-  mailalias {"root":
+  postfix::mailalias {"root":
     recipient => $root_mail_recipient,
-    notify    => Exec["newaliases"],
   }
 }

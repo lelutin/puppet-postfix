@@ -5,11 +5,10 @@ Creates postfix hashed "map" files. It will create "${name}", and then build
 "${name}.db" using the "postmap" command. The map file can then be referred to
 using postfix::config.
 
-Note: the content of the file is not managed by this definition.
-
 Parameters:
 - *name*: the name of the map file.
-- *ensure*: present/absent, defaults to present
+- *ensure*: present/absent, defaults to present.
+- *source*: file source.
 
 Requires:
 - Class["postfix"]
@@ -29,12 +28,12 @@ Example usage:
   }
 
 */
-define postfix::hash ($ensure="present") {
+define postfix::hash ($ensure="present", $source = false) {
 
   # selinux labels differ from one distribution to another
   case $operatingsystem {
 
-    RedHat: {
+    RedHat, CentOS: {
       case $lsbmajdistrelease {
         "4":     { $postfix_seltype = "etc_t" }
         "5":     { $postfix_seltype = "postfix_etc_t" }
@@ -47,11 +46,28 @@ define postfix::hash ($ensure="present") {
     }
   }
 
-  file {"${name}":
-    ensure => $ensure,
-    mode   => 600,
-    seltype => $postfix_seltype,
-    require => Package["postfix"],
+  case $source {
+    false: {
+      file {"${name}":
+        ensure  => $ensure,
+        mode    => 600,
+        owner   => root,
+        group   => root,
+        seltype => $postfix_seltype,
+        require => Package["postfix"],
+      }
+    }
+    default: {
+      file {"${name}":
+        ensure  => $ensure,
+        mode    => 600,
+        owner   => root,
+        group   => root,
+        source  => $source,
+        seltype => $postfix_seltype,
+        require => Package["postfix"],
+      }
+    }
   }
 
   file {"${name}.db":
