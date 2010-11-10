@@ -64,6 +64,10 @@ class postfix {
     ensure => installed
   }
 
+  if $operatingsystem == 'debian' {
+    Package[mailx] { name => 'heirloom-mailx' }
+  }
+
   service { "postfix":
     ensure  => running,
     require => Package["postfix"],
