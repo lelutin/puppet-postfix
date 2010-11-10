@@ -56,6 +56,10 @@ class postfix {
     "":   { $postfix_mastercf_tail = "" }
   }
 
+  if $postfix_use_amavisd == 'yes' {
+    include postfix::amavis
+  }
+
   package { ["postfix", "mailx"]:
     ensure => installed
   }

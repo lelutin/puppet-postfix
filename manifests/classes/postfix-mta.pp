@@ -32,9 +32,9 @@
 #
 class postfix::mta {
 
-  case $postfix_relayhost {
-    "":   { fail("Required \$postfix_relayhost variable is not defined.") }
-  }
+  #case $postfix_relayhost {
+  #  "":   { fail("Required \$postfix_relayhost variable is not defined.") }
+  #}
 
   case $postfix_mydestination {
     "": { $postfix_mydestination = "\$myorigin" }
