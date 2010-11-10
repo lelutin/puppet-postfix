@@ -40,6 +40,9 @@ class postfix {
   case $root_mail_recipient {
     "":   { $root_mail_recipient = "nobody" }
   }
+  case $postfix_manage_tls_policy {
+    "":   { $postfix_manage_tls_policy = "no" }
+  }
   case $postfix_use_amavisd {
     "":   { $postfix_use_amavisd = "no" }
   }
@@ -56,6 +59,14 @@ class postfix {
     "":   { $postfix_mastercf_tail = "" }
   }
 
+  # Bootstrap moduledir
+  include common::moduledir
+  module_dir{'postfix': }
+
+  # Include optional classes
+  if $postfix_manage_tls_policy == 'yes' {
+    include postfix::tlspolicy
+  }
   if $postfix_use_amavisd == 'yes' {
     include postfix::amavis
   }
