@@ -76,7 +76,7 @@ class postfix {
   }
 
   if $operatingsystem == 'debian' {
-    Package[mailx] { name => 'heirloom-mailx' }
+    Package[mailx] { name => 'bsd-mailx' }
   }
 
   service { "postfix":
