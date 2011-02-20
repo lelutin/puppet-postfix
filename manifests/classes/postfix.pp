@@ -5,13 +5,13 @@
 # delivery and an SMTP server listening on the loopback interface.
 #
 # Parameters:
-# - *$postfix_ng_smtp_listen*: address on which the smtp service will listen to. defaults to 127.0.0.1
+# - *$postfix_smtp_listen*: address on which the smtp service will listen to. defaults to 127.0.0.1
 # - *$root_mail_recipient*: who will recieve root's emails. defaults to "nobody"
 #
 # Example usage:
 #
 #   node "toto.example.com" {
-#     $postfix_ng_smtp_listen = "192.168.1.10"
+#     $postfix_smtp_listen = "192.168.1.10"
 #     include postfix
 #   }
 #
@@ -40,10 +40,43 @@ class postfix {
   case $root_mail_recipient {
     "":   { $root_mail_recipient = "nobody" }
   }
+  case $postfix_manage_tls_policy {
+    "":   { $postfix_manage_tls_policy = "no" }
+  }
+  case $postfix_use_amavisd {
+    "":   { $postfix_use_amavisd = "no" }
+  }
+  case $postfix_use_dovecot_lda {
+    "":   { $postfix_use_dovecot_lda = "no" }
+  }
+  case $postfix_use_schleuder {
+    "":   { $postfix_use_schleuder = "no" }
+  }
+  case $postfix_use_sympa {
+    "":   { $postfix_use_sympa = "no" }
+  }
+  case $postfix_mastercf_tail {
+    "":   { $postfix_mastercf_tail = "" }
+  }
 
+  # Bootstrap moduledir
+  include common::moduledir
+  module_dir{'postfix': }
+
+  # Include optional classes
+  if $postfix_manage_tls_policy == 'yes' {
+    include postfix::tlspolicy
+  }
+  if $postfix_use_amavisd == 'yes' {
+    include postfix::amavis
+  }
 
   package { ["postfix", "mailx"]:
     ensure => installed
+  }
+
+  if $operatingsystem == 'debian' {
+    Package[mailx] { name => 'bsd-mailx' }
   }
 
   service { "postfix":
@@ -83,7 +116,7 @@ class postfix {
     content => $operatingsystem ? {
       Redhat => template("postfix/master.cf.redhat5.erb"),
       CentOS => template("postfix/master.cf.redhat5.erb"),
-      Debian => template("postfix/master.cf.debian-etch.erb"),
+      Debian => template("postfix/master.cf.debian-$lsbdistcodename.erb"),
       Ubuntu => template("postfix/master.cf.debian-etch.erb"),
     },
     seltype => $postfix_seltype,

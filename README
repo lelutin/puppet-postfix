@@ -4,6 +4,12 @@ This module will help install and configure postfix.
 
 A couple of classes will preconfigure postfix for common needs.
 
+Config
+------
+- set $postfix_use_amavisd="yes" to include postfix::amavis
+- set $postfix_manage_tls_policy="yes" to manage TLS policy (see
+  postfix::tlspolicy for details)
+
 == Example:
 
   include postfix
