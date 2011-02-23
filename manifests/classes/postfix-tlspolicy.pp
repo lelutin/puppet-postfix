@@ -37,7 +37,8 @@ class postfix::tlspolicy {
     source  => [
                 "puppet:///modules/site-postfix/${fqdn}/tls_policy.d",
                 "puppet:///modules/site-postfix/tls_policy.d",
-                "puppet:///modules/postfix/tls_policy.d"
+                "puppet:///modules/postfix/tls_policy.d",
+                "puppet:///files/etc/postfix/tls_policy.d",
                ],
     recurse => true,
     purge   => false,
