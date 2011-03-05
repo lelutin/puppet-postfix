@@ -40,6 +40,9 @@ class postfix {
   case $root_mail_recipient {
     "":   { $root_mail_recipient = "nobody" }
   }
+  case $postfix_manage_header_checks {
+    "":   { $postfix_manage_header_checks = "no" }
+  }
   case $postfix_manage_tls_policy {
     "":   { $postfix_manage_tls_policy = "no" }
   }
@@ -64,6 +67,9 @@ class postfix {
   module_dir{'postfix': }
 
   # Include optional classes
+  if $postfix_manage_header_checks == 'yes' {
+    include postfix::header_checks
+  }
   if $postfix_manage_tls_policy == 'yes' {
     include postfix::tlspolicy
   }
