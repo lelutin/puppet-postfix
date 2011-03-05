@@ -7,6 +7,11 @@ A couple of classes will preconfigure postfix for common needs.
 Config
 ------
 - set $postfix_use_amavisd="yes" to include postfix::amavis
+- set $postfix_anon_sasl="yes" to hide the originating IP in email
+  relayed for an authenticated SASL client; this needs Postfix
+  2.3 or later to work; beware! Postfix logs the header replacement
+  has been done, which means that you are storing this information,
+  unless you are anonymizing your logs.
 - set $postfix_manage_header_checks="yes" to manage header checks (see
   postfix::header_checks for details)
 - set $postfix_manage_tls_policy="yes" to manage TLS policy (see
