@@ -2,7 +2,10 @@
 # == Class: postfix::tlspolicy
 #
 # Manages Postfix TLS policy by merging policy snippets shipped:
-# - in the module's files/tls_policy.d/
+# - in the module's files/tls_policy.d/ or puppet:///files/etc/postfix/tls_policy.d
+#   (the latter takes precedence if present); site-postfix module is supported
+#   as well, see the source argument of file {"$postfix_tlspolicy_snippets_dir"
+#   bellow for details.
 # - via postfix::tlspolicy_snippet defines
 #
 # Parameters:
