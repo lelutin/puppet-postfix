@@ -64,6 +64,9 @@ class postfix {
   case $postfix_mastercf_tail {
     "":   { $postfix_mastercf_tail = "" }
   }
+  case $postfix_inet_interfaces {
+    "": { $postfix_inet_interfaces = 'all' }
+  }
 
   # Bootstrap moduledir
   include common::moduledir
@@ -153,7 +156,7 @@ class postfix {
   postfix::config {
     "myorigin":   value => "${fqdn}";
     "alias_maps": value => "hash:/etc/aliases";
-    "inet_interfaces": value => "all";
+    "inet_interfaces": value => "${postfix_inet_interfaces}";
   }
 
   case $operatingsystem {
