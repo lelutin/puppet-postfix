@@ -67,6 +67,9 @@ class postfix {
   case $postfix_inet_interfaces {
     "": { $postfix_inet_interfaces = 'all' }
   }
+  case $postfix_myorigin {
+    "": { $postfix_myorigin = $fqdn }
+  }
 
   # Bootstrap moduledir
   include common::moduledir
@@ -154,7 +157,7 @@ class postfix {
 
   # Default configuration parameters
   postfix::config {
-    "myorigin":   value => "${fqdn}";
+    "myorigin":   value => "${postfix_myorigin}";
     "alias_maps": value => "hash:/etc/aliases";
     "inet_interfaces": value => "${postfix_inet_interfaces}";
   }
