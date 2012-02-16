@@ -5,7 +5,7 @@ class postfix::disable {
     enable => false,
   }
   package{'postfix':
-    ensure => removed,
+    ensure => absent,
     require => Service['postfix'],
   }
 
