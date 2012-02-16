@@ -18,10 +18,10 @@
 class postfix {
 
   # selinux labels differ from one distribution to another
-  case $operatingsystem {
+  case $::operatingsystem {
 
     RedHat, CentOS: {
-      case $lsbmajdistrelease {
+      case $::lsbmajdistrelease {
         "4":     { $postfix_seltype = "etc_t" }
         "5":     { $postfix_seltype = "postfix_etc_t" }
         default: { $postfix_seltype = undef }
@@ -93,7 +93,7 @@ class postfix {
     ensure => installed
   }
 
-  if $operatingsystem == 'debian' {
+  if $::operatingsystem == 'debian' {
     Package[mailx] { name => 'bsd-mailx' }
   }
 
@@ -131,10 +131,10 @@ class postfix {
     owner => "root",
     group => "root",
     mode => "0644",
-    content => $operatingsystem ? {
+    content => $::operatingsystem ? {
       Redhat => template("postfix/master.cf.redhat5.erb"),
       CentOS => template("postfix/master.cf.redhat5.erb"),
-      Debian => template("postfix/master.cf.debian-$lsbdistcodename.erb"),
+      Debian => template("postfix/master.cf.debian-${::lsbdistcodename}.erb"),
       Ubuntu => template("postfix/master.cf.debian-etch.erb"),
     },
     seltype => $postfix_seltype,
@@ -162,7 +162,7 @@ class postfix {
     "inet_interfaces": value => "${postfix_inet_interfaces}";
   }
 
-  case $operatingsystem {
+  case $::operatingsystem {
     RedHat, CentOS: {
       postfix::config {
         "sendmail_path": value => "/usr/sbin/sendmail.postfix";

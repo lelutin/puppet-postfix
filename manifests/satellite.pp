@@ -25,7 +25,7 @@ class postfix::satellite {
 
   # If $valid_fqdn exists, use it to override $fqdn
   case $valid_fqdn {
-    "":      { $valid_fqdn = $fqdn }
+    "":      { $valid_fqdn = $::fqdn }
     default: { $fqdn = "${valid_fqdn}" }
   }
 
