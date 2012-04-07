@@ -141,6 +141,12 @@ sympabounce  unix  -       n       n       -       -       pipe
 mlmmj   unix  -       n       n       -       -       pipe
   flags=DORhu user=mlmmj argv=/usr/bin/mlmmj-recieve -F -L /var/spool/mlmmj/$nexthop/
 <%- end -%>
+<% if postfix_use_firma == 'yes' %>
+firma  unix  -       n       n       -       -       pipe
+  flags=DRhu user=firma argv=/usr/local/bin/firma -p ${user}
+firmarequest  unix  -       n       n       -       -       pipe
+  flags=DRhu user=firma argv=/usr/local/bin/firma -e ${user}
+<% end %>
 
 <%- unless postfix_mastercf_tail.to_s.empty? then -%>
 <%= postfix_mastercf_tail %>
