@@ -16,6 +16,11 @@ Config
   postfix::header_checks for details)
 - set $postfix_manage_tls_policy="yes" to manage TLS policy (see
   postfix::tlspolicy for details)
+- by default, postfix will bind to all interfaces, but sometimes you don't want
+  that. To bind to specific interfaces, use the $postfix_inet_interfaces
+  variable and set it to exactly what would be in the main.cf file.
+- some hosts have weird-looking host names (dedicated servers and VPSes). To
+  set the server's domain of origin, set the $postfix_myorigin value
 
 == Example:
 
