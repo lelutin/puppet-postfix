@@ -114,6 +114,10 @@ sympa        unix  -       n       n       -       -       pipe
 sympabounce  unix  -       n       n       -       -       pipe
   flags=R user=sympa argv=/usr/lib/sympa/bin/bouncequeue ${user}
 <% end %>
+<% if postfix_use_mlmmj == 'yes' %>
+mlmmj   unix  -       n       n       -       -       pipe
+  flags=DORhu user=mlmmj argv=/usr/bin/mlmmj-recieve -F -L /var/spool/mlmmj/$nexthop/
+<%- end -%>
 
 <%- unless postfix_mastercf_tail.to_s.empty? then -%>
 <%= postfix_mastercf_tail %>
