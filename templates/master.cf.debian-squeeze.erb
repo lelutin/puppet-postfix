@@ -143,9 +143,9 @@ mlmmj   unix  -       n       n       -       -       pipe
 <%- end -%>
 <% if postfix_use_firma == 'yes' %>
 firma  unix  -       n       n       -       -       pipe
-  flags=DRhu user=firma argv=/usr/local/bin/firma -p ${user}
+  flags=DRhu user=firma argv=/var/lib/firma/firma -p ${user}
 firmarequest  unix  -       n       n       -       -       pipe
-  flags=DRhu user=firma argv=/usr/local/bin/firma -e ${user}
+  flags=DRhu user=firma argv=/var/lib/firma/firma -e ${user}
 <% end %>
 
 <%- unless postfix_mastercf_tail.to_s.empty? then -%>
