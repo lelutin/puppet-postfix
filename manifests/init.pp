@@ -88,6 +88,12 @@ class postfix {
   if $postfix_use_amavisd == 'yes' {
     include postfix::amavis
   }
+  if $postfix_manage_transport_regexp == 'yes' {
+    include postfix::transport_regexp
+  }
+  if $postfix_manage_virtual_regexp == 'yes' {
+    include postfix::virtual_regexp
+  }
 
   package { ["postfix", "mailx"]:
     ensure => installed

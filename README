@@ -14,6 +14,10 @@ Config
   unless you are anonymizing your logs.
 - set $postfix_manage_header_checks="yes" to manage header checks (see
   postfix::header_checks for details)
+- set $postfix_manage_transport_regexp="yes" to manage header checks (see
+  postfix::transport_regexp for details)
+- set $postfix_manage_virtual_regexp="yes" to manage header checks (see
+  postfix::virtual_regexp for details)
 - set $postfix_manage_tls_policy="yes" to manage TLS policy (see
   postfix::tlspolicy for details)
 - by default, postfix will bind to all interfaces, but sometimes you don't want
