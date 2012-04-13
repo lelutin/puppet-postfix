@@ -37,6 +37,7 @@ define postfix::config ($ensure = present, $value, $nonstandard = false) {
           false => "test \"x$(postconf -h ${name})\" = 'x${value}'",
           true  => "test \"x$(egrep '^${name} ' /etc/postfix/main.cf | cut -d= -f2 | cut -d' ' -f2)\" = 'x${value}'",
         },
+        path => "/usr/bin:/usr/sbin/:/bin:/sbin",
         notify  => Service["postfix"],
         require => File["/etc/postfix/main.cf"],
       }
