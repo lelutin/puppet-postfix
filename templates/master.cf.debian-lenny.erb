@@ -11,11 +11,12 @@
 # ==========================================================================
 <% if postfix_smtp_listen == 'all' %>smtp      inet  n       -       -       -       -       smtpd
 <% else %><%= postfix_smtp_listen %>:smtp      inet  n       -       -       -       -       smtpd<% end %>
-#submission inet n       -       -       -       -       smtpd
-#  -o smtpd_tls_security_level=encrypt
-#  -o smtpd_sasl_auth_enable=yes
-#  -o smtpd_client_restrictions=permit_sasl_authenticated,reject
-#  -o milter_macro_daemon_name=ORIGINATING
+<% if postfix_use_submission == 'yes' %>submission inet n       -       -       -       -       smtpd
+  -o smtpd_tls_security_level=encrypt
+  -o smtpd_sasl_auth_enable=yes
+  -o smtpd_client_restrictions=permit_sasl_authenticated,reject
+  -o milter_macro_daemon_name=ORIGINATING
+<% end %>
 <% if postfix_use_smtps == 'yes' %>smtps     inet  n       -       -       -       -       smtpd
   -o smtpd_tls_wrappermode=yes
   -o smtpd_sasl_auth_enable=yes
