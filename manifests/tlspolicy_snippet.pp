@@ -35,13 +35,10 @@ define postfix::tlspolicy_snippet ($ensure="present", $value = false) {
     fail("The value parameter must be set when using the postfix::tlspolicy_snippet define with ensure=present.")
   }
 
-  file { "${postfix::tlspolicy::postfix_tlspolicy_snippets_dir}/${name}":
+  concat::fragment { "postfix_tlspolicy_${name}":
     ensure  => "$ensure",
     content => "${name}		${value}\n",
-    mode    => 600,
-    owner   => root,
-    group   => 0,
-    notify => Exec["concat_${postfix::tlspolicy::postfix_merged_tlspolicy}"],
+    target  => "$postfix::tlspolicy::postfix_merged_tlspolicy",
   }
 
 }

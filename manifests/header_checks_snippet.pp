@@ -43,23 +43,20 @@ define postfix::header_checks_snippet (
 
   include postfix::header_checks
 
-  $snippetfile = "${postfix::header_checks::postfix_header_checks_snippets_dir}/${name}"
-  
-  file { "$snippetfile":
+  $fragment = "postfix_header_checks_${name}"
+
+  concat::fragment { "$fragment":
     ensure  => "$ensure",
-    mode    => 600,
-    owner   => root,
-    group   => 0,
-    notify => Exec["concat_${postfix::header_checks::postfix_merged_header_checks}"],
+    target  => '/etc/postfix/header_checks',
   }
 
   if $source {
-    File["$snippetfile"] {
+    Concat::Fragment["$fragment"] {
       source => $source,
     }
   }
   else {
-    File["$snippetfile"] {
+    Concat::Fragment["$fragment"] {
       content => $content,
     }
   }
