@@ -29,11 +29,11 @@ Example usage:
 
 define postfix::tlspolicy_snippet ($ensure="present", $value = false) {
 
-  include postfix::tlspolicy
-
   if ($value == false) and ($ensure == "present") {
     fail("The value parameter must be set when using the postfix::tlspolicy_snippet define with ensure=present.")
   }
+
+  include postfix::tlspolicy
 
   concat::fragment { "postfix_tlspolicy_${name}":
     ensure  => "$ensure",
