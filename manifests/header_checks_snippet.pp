@@ -37,10 +37,6 @@ define postfix::header_checks_snippet (
     fail("Only one of \$source or \$content must specified for postfix::header_checks_snippet ${name}")
   }
 
-  if ($value == false) and ($ensure == "present") {
-    fail("The value parameter must be set when using the postfix::header_checks_snippet define with ensure=present.")
-  }
-
   include postfix::header_checks
 
   $fragment = "postfix_header_checks_${name}"
