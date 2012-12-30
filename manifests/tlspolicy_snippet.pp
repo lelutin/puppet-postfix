@@ -1,7 +1,7 @@
 /*
 == Definition: postfix::tlspolicy_snippet
 
-Adds a TLS policy snippets to /etc/postfix/tls_policy.d/.
+Adds a TLS policy snippets to /etc/postfix/tls_policy.
 See the postfix::tlspolicy class for details.
 
 Parameters:
