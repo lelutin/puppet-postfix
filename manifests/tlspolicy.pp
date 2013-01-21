@@ -1,22 +1,15 @@
 #
 # == Class: postfix::tlspolicy
 #
-# Manages Postfix TLS policy by merging policy snippets shipped:
-# - in the module's files/tls_policy.d/ or puppet:///files/etc/postfix/tls_policy.d
-#   (the latter takes precedence if present); site-postfix module is supported
-#   as well, see the source argument of file {"$postfix_tlspolicy_snippets_dir"
-#   bellow for details.
-# - via postfix::tlspolicy_snippet defines
+# Manages Postfix TLS policy by merging policy snippets configured
+# via postfix::tlspolicy_snippet defines
 #
 # Parameters:
 # - $postfix_tls_fingerprint_digest (defaults to sha1)
 #
-# Example usage:
-# 
-#   node "toto.example.com" {
-#     $postfix_manage_tls_policy = yes
-#     include postfix
-#   }
+# Note that this class is useless when used directly.
+# The postfix::tlspolicy_snippet defines takes care of importing
+# it anyway.
 #
 class postfix::tlspolicy {
 
@@ -29,26 +22,13 @@ class postfix::tlspolicy {
   module_dir{'postfix/tls_policy': }
 
   $postfix_tlspolicy_dir          = "${common::moduledir::module_dir_path}/postfix/tls_policy"
-  $postfix_tlspolicy_snippets_dir = "${postfix_tlspolicy_dir}/tls_policy.d"
   $postfix_merged_tlspolicy       = "${postfix_tlspolicy_dir}/merged_tls_policy"
 
-  file {"$postfix_tlspolicy_snippets_dir":
-    ensure  => 'directory',
-    owner   => 'root',
-    group   => '0',
-    mode    => '700',
-    source  => [
-                "puppet:///modules/site-postfix/${fqdn}/tls_policy.d",
-                "puppet:///modules/site-postfix/tls_policy.d",
-                "puppet:///modules/postfix/tls_policy.d",
-               ],
-    recurse => true,
-    purge   => false,
-  }
-
-  concatenated_file { "$postfix_merged_tlspolicy":
-    dir     => "${postfix_tlspolicy_snippets_dir}",
-    require => File["$postfix_tlspolicy_snippets_dir"],
+  concat { "$postfix_merged_tlspolicy":
+    require => File[$postfix_tlspolicy_dir],
+    owner   => root,
+    group   => root,
+    mode    => '0600',
   }
 
   postfix::hash { '/etc/postfix/tls_policy':
@@ -66,6 +46,13 @@ class postfix::tlspolicy {
                 Postfix::Hash['/etc/postfix/tls_policy'],
                 Postfix::Config['smtp_tls_fingerprint_digest'],
                ],
+  }
+
+  # Cleanup previous implementation's internal files
+  file { "${postfix_tlspolicy_dir}/tls_policy.d":
+    ensure  => absent,
+    recurse => true,
+    force   => true,
   }
 
 }

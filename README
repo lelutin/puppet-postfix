@@ -4,6 +4,10 @@ This module will help install and configure postfix.
 
 A couple of classes will preconfigure postfix for common needs.
 
+This module needs:
+
+- the concat module: git://labs.riseup.net/shared-concat
+
 Config
 ------
 - set $postfix_use_amavisd="yes" to include postfix::amavis
@@ -32,3 +36,24 @@ Config
 
   postfix::config { "relay_domains": value  => "localhost host.foo.com" }
 
+Deprecation notice
+------------------
+
+It used to be that one could drop header checks snippets into the
+following source directories:
+
+   "puppet:///modules/site-postfix/${fqdn}/header_checks.d"
+   "puppet:///modules/site-postfix/header_checks.d"
+   "puppet:///files/etc/postfix/header_checks.d"
+   "puppet:///modules/postfix/header_checks.d"
+
+... and TLS policy snippets into those:
+
+   "puppet:///modules/site-postfix/${fqdn}/tls_policy.d"
+   "puppet:///modules/site-postfix/tls_policy.d"
+   "puppet:///modules/postfix/tls_policy.d"
+
+This is not supported anymore.
+
+Every such snippet much now be configured using the (respectively)
+postfix::header_checks_snippet and postfix::tlspolicy_snippet defines.

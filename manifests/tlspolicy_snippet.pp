@@ -1,7 +1,7 @@
 /*
 == Definition: postfix::tlspolicy_snippet
 
-Adds a TLS policy snippets to /etc/postfix/tls_policy.d/.
+Adds a TLS policy snippets to /etc/postfix/tls_policy.
 See the postfix::tlspolicy class for details.
 
 Parameters:
@@ -29,19 +29,16 @@ Example usage:
 
 define postfix::tlspolicy_snippet ($ensure="present", $value = false) {
 
-  include postfix::tlspolicy
-
   if ($value == false) and ($ensure == "present") {
     fail("The value parameter must be set when using the postfix::tlspolicy_snippet define with ensure=present.")
   }
 
-  file { "${postfix::tlspolicy::postfix_tlspolicy_snippets_dir}/${name}":
+  include postfix::tlspolicy
+
+  concat::fragment { "postfix_tlspolicy_${name}":
     ensure  => "$ensure",
     content => "${name}		${value}\n",
-    mode    => 600,
-    owner   => root,
-    group   => 0,
-    notify => Exec["concat_${postfix::tlspolicy::postfix_merged_tlspolicy}"],
+    target  => "$postfix::tlspolicy::postfix_merged_tlspolicy",
   }
 
 }
