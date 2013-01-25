@@ -41,7 +41,7 @@ class postfix(
   $manage_tls_policy       = "no",
   $manage_transport_regexp = "no",
   $manage_virtual_regexp   = "no",
-  $tls_fingerprint_digest  = 'sha1'
+  $tls_fingerprint_digest  = 'sha1',
   $use_amavisd             = "no",
   $use_dovecot_lda         = "no",
   $use_schleuder           = "no",
