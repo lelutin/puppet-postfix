@@ -14,14 +14,18 @@
 # Example usage:
 #
 #   node "toto.local.lan" {
-#     $postfix_relayhost = "mail.example.com"
-#     $valid_fqdn = "toto.example.com"
-#     $root_mail_recipient = "the.sysadmin@example.com"
-#
-#     include postfix::satellite
+#     class { 'postfix::satellite':
+#       relayhost           => "mail.example.com"
+#       valid_fqdn          => "toto.example.com"
+#       root_mail_recipient => "the.sysadmin@example.com"
+#     }
 #   }
 #
-class postfix::satellite {
+class postfix::satellite(
+  $relayhost           = '',
+  $valid_fqdn          = '',
+  $root_mail_recipient = ''
+) {
 
   # If $valid_fqdn exists, use it to override $fqdn
   case $valid_fqdn {
@@ -29,7 +33,13 @@ class postfix::satellite {
     default: { $fqdn = "${valid_fqdn}" }
   }
 
-  include postfix::mta
+  class { 'postfix:
+    root_mail_recipient => $root_mail_recipient,
+  }
+
+  class { 'postfix::mta':
+    relayhost => $relayhost,
+  }
 
   postfix::virtual {"@${valid_fqdn}":
     ensure      => present,

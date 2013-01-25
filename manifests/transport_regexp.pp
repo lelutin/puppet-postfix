@@ -11,8 +11,9 @@
 # Example usage:
 # 
 #   node "toto.example.com" {
-#     $postfix_manage_transport_regexp = yes
-#     include postfix
+#     class { 'postfix':
+#       manage_transport_regexp => 'yes',
+#     }
 #     postfix::config { "transport_maps":
 #       value => "hash:/etc/postfix/transport, regexp:/etc/postfix/transport_regexp",
 #     }

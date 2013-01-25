@@ -16,8 +16,9 @@ Requires:
 Example usage:
 
   node "toto.example.com" {
-    $postfix_manage_tls_policy = yes
-    include postfix
+    class { 'postfix':
+      manage_tls_policy => 'yes',
+    }
     postfix::tlspolicy_snippet {
       'example.com':  value => 'encrypt';
       '.example.com': value => 'encrypt';

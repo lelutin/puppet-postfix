@@ -7,14 +7,14 @@
 # service type  private unpriv  chroot  wakeup  maxproc command + args
 #               (yes)   (yes)   (yes)   (never) (100)
 # ==========================================================================
-<% if postfix_smtp_listen == 'all' %>smtp      inet  n       -       -       -       -       smtpd
-<% else %><%= postfix_smtp_listen %>:smtp      inet  n       -       -       -       -       smtpd<% end %>
-<% if postfix_use_submission == 'yes' %>submission inet n       -       -       -       -       smtpd
+<% if smtp_listen == 'all' %>smtp      inet  n       -       -       -       -       smtpd
+<% else %><%= smtp_listen %>:smtp      inet  n       -       -       -       -       smtpd<% end %>
+<% if use_submission == 'yes' %>submission inet n       -       -       -       -       smtpd
   -o smtpd_enforce_tls=yes
   -o smtpd_sasl_auth_enable=yes
   -o smtpd_client_restrictions=permit_sasl_authenticated,reject
 <% end %>
-<% if postfix_use_smtps == 'yes' %>smtps     inet  n       -       -       -       -       smtpd
+<% if use_smtps == 'yes' %>smtps     inet  n       -       -       -       -       smtpd
   -o smtpd_tls_wrappermode=yes
   -o smtpd_sasl_auth_enable=yes
   -o smtpd_client_restrictions=permit_sasl_authenticated,reject
@@ -77,7 +77,7 @@ scalemail-backend unix	-	n	n	-	2	pipe
 mailman   unix  -       n       n       -       -       pipe
   flags=FR user=list argv=/usr/lib/mailman/bin/postfix-to-mailman.py
   ${nexthop} ${user}
-<% if postfix_use_amavisd == 'yes' %>
+<% if use_amavisd == 'yes' %>
 amavis unix - - - - 2 smtp
         -o smtp_data_done_timeout=1200
         -o smtp_send_xforward_command=yes
@@ -96,25 +96,25 @@ amavis unix - - - - 2 smtp
         -o receive_override_options=no_unknown_recipient_checks,no_header_body_checks
         -o smtpd_bind_address=127.0.0.1
 <% end %>
-<% if postfix_use_dovecot_lda == 'yes' %>
+<% if use_dovecot_lda == 'yes' %>
 dovecot   unix  -       n       n       -       -       pipe
   flags=DRhu user=vmail:vmail argv=/usr/lib/dovecot/deliver -f ${sender} -d ${user}@${nexthop} -n -m ${extension}  
 <% end %>
-<% if postfix_use_schleuder == 'yes' %>
+<% if use_schleuder == 'yes' %>
 schleuder  unix  -       n       n       -       -       pipe
   flags=DRhu user=schleuder argv=/usr/bin/schleuder ${user}
 <% end %>
-<% if postfix_use_sympa == 'yes' %>
+<% if use_sympa == 'yes' %>
 sympa        unix  -       n       n       -       -       pipe
   flags=R user=sympa argv=/usr/lib/sympa/bin/queue ${recipient}
 sympabounce  unix  -       n       n       -       -       pipe
   flags=R user=sympa argv=/usr/lib/sympa/bin/bouncequeue ${user}
 <% end %>
-<% if postfix_use_mlmmj == 'yes' %>
+<% if use_mlmmj == 'yes' %>
 mlmmj   unix  -       n       n       -       -       pipe
   flags=DORhu user=mlmmj argv=/usr/bin/mlmmj-recieve -F -L /var/spool/mlmmj/$nexthop/
 <%- end -%>
 
-<%- unless postfix_mastercf_tail.to_s.empty? then -%>
-<%= postfix_mastercf_tail %>
+<%- unless mastercf_tail.to_s.empty? then -%>
+<%= mastercf_tail %>
 <%- end -%>

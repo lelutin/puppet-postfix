@@ -8,31 +8,37 @@ This module needs:
 
 - the concat module: git://labs.riseup.net/shared-concat
 
+!! Upgrade Notice (01/2013) !!
+
+This module now uses parameterized classes, where it used global variables
+before. So please whatch out before pulling, you need to change the 
+class declarations in your manifest !
+
 Config
 ------
-- set $postfix_use_amavisd="yes" to include postfix::amavis
-- set $postfix_anon_sasl="yes" to hide the originating IP in email
+- set $use_amavisd="yes" to include postfix::amavis
+- set $anon_sasl="yes" to hide the originating IP in email
   relayed for an authenticated SASL client; this needs Postfix
   2.3 or later to work; beware! Postfix logs the header replacement
   has been done, which means that you are storing this information,
   unless you are anonymizing your logs.
-- set $postfix_manage_header_checks="yes" to manage header checks (see
+- set $manage_header_checks="yes" to manage header checks (see
   postfix::header_checks for details)
-- set $postfix_manage_transport_regexp="yes" to manage header checks (see
+- set $manage_transport_regexp="yes" to manage header checks (see
   postfix::transport_regexp for details)
-- set $postfix_manage_virtual_regexp="yes" to manage header checks (see
+- set $manage_virtual_regexp="yes" to manage header checks (see
   postfix::virtual_regexp for details)
-- set $postfix_manage_tls_policy="yes" to manage TLS policy (see
+- set $manage_tls_policy="yes" to manage TLS policy (see
   postfix::tlspolicy for details)
 - by default, postfix will bind to all interfaces, but sometimes you don't want
-  that. To bind to specific interfaces, use the $postfix_inet_interfaces
+  that. To bind to specific interfaces, use the $inet_interfaces
   variable and set it to exactly what would be in the main.cf file.
 - some hosts have weird-looking host names (dedicated servers and VPSes). To
-  set the server's domain of origin, set the $postfix_myorigin value
+  set the server's domain of origin, set the $myorigin value
 
 == Example:
 
-  include postfix
+  class { 'postfix': }
 
   postfix::config { "relay_domains": value  => "localhost host.foo.com" }
 

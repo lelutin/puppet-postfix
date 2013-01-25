@@ -18,7 +18,7 @@ Example usage:
 
   node "toto.example.com" {
 
-    include postfix
+    class { 'postfix': }
 
     postfix::hash { "/etc/postfix/transport":
       ensure => present,

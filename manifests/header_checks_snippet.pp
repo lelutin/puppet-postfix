@@ -14,7 +14,7 @@ Requires:
 Example usage:
 
   node "toto.example.com" {
-    include postfix
+    class { 'postfix': }
     postfix::header_checks_snippet {
       'wrong_date': content => 'FIXME';
       'bla':        source => 'puppet:///files/etc/postfix/header_checks.d/bla';

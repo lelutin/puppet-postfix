@@ -5,18 +5,15 @@
 # via postfix::tlspolicy_snippet defines
 #
 # Parameters:
-# - $postfix_tls_fingerprint_digest (defaults to sha1)
+# - $fingerprint_digest (defaults to sha1)
 #
 # Note that this class is useless when used directly.
 # The postfix::tlspolicy_snippet defines takes care of importing
 # it anyway.
 #
-class postfix::tlspolicy {
-
-  # Default value for parameters
-  case $postfix_tls_fingerprint_digest {
-    "": { $postfix_tls_fingerprint_digest = 'sha1' }
-  }
+class postfix::tlspolicy(
+  $fingerprint_digest = 'sha1'
+) {
 
   include common::moduledir
   module_dir{'postfix/tls_policy': }
@@ -37,7 +34,7 @@ class postfix::tlspolicy {
   }
 
   postfix::config {
-    'smtp_tls_fingerprint_digest': value => "$postfix_tls_fingerprint_digest";
+    'smtp_tls_fingerprint_digest': value => "$fingerprint_digest";
   }
 
   postfix::config { 'smtp_tls_policy_maps':

@@ -14,7 +14,7 @@ Requires:
 Example usage:
 
   node "toto.example.com" {
-    include postfix
+    class { 'postfix': }
     postfix::virtual_regexp {
       'wrong_date': content => 'FIXME';
       'bla':        source => 'puppet:///files/etc/postfix/virtual_regexp.d/bla';

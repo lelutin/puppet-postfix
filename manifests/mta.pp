@@ -15,14 +15,21 @@
 # - *$postfix_mydestination*
 # - every global variable which works for class "postfix" will work here.
 #
+# Requires:
+# - Class["postfix"]
+#
 # Example usage:
 #
 #   node "toto.example.com" {
-#     $postfix_relayhost = "mail.example.com"
-#     $postfix_smtp_listen = "0.0.0.0"
-#     $postfix_mydestination = "\$myorigin, myapp.example.com"
 #
-#     include postfix::mta
+#     class { 'postfix':
+#       smtp_listen => "0.0.0.0",
+#     }
+#
+#     class { 'postfix::mta':
+#       relayhost     => "mail.example.com",
+#       mydestination => "\$myorigin, myapp.example.com",
+#     }
 #
 #     postfix::transport { "myapp.example.com":
 #       ensure => present,
@@ -30,22 +37,24 @@
 #     }
 #   }
 #
-class postfix::mta {
+class postfix::mta(
+  $mydestination = '',
+  $relayhost     = ''
+) {
 
-  #case $postfix_relayhost {
-  #  "":   { fail("Required \$postfix_relayhost variable is not defined.") }
+  #case $relayhost {
+  #  "":   { fail("Required relayhost parameter is not defined.") }
   #}
 
-  case $postfix_mydestination {
+  case $mydestination {
     "": { $postfix_mydestination = "\$myorigin" }
+    default: { $postfix_mydestination = "$mydestination" }
   }
-
-  include postfix
 
   postfix::config {
     "mydestination":                        value => $postfix_mydestination;
     "mynetworks":                           value => "127.0.0.0/8";
-    "relayhost":                            value => $postfix_relayhost;
+    "relayhost":                            value => $relayhost;
     "virtual_alias_maps":                   value => "hash:/etc/postfix/virtual";
     "transport_maps":                       value => "hash:/etc/postfix/transport";
   }

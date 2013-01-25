@@ -11,8 +11,9 @@
 # Example usage:
 # 
 #   node "toto.example.com" {
-#     $postfix_manage_virtual_regexp = yes
-#     include postfix
+#     class { 'postfix':
+#       manage_virtual_regexp => 'yes',
+#     }
 #     postfix::config { "virtual_alias_maps":
 #       value => 'hash://postfix/virtual, regexp:/etc/postfix/virtual_regexp',
 #     }

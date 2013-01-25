@@ -5,17 +5,55 @@
 # delivery and an SMTP server listening on the loopback interface.
 #
 # Parameters:
-# - *$postfix_smtp_listen*: address on which the smtp service will listen to. defaults to 127.0.0.1
+# - *$smtp_listen*: address on which the smtp service will listen to. defaults to 127.0.0.1
 # - *$root_mail_recipient*: who will recieve root's emails. defaults to "nobody"
+# - *$anon_sasl*: set $anon_sasl="yes" to hide the originating IP in email
+# - *$manage_header_checks*: manage header checks
+# - *$manage_tls_policy*: manage tls policy
+# - *$manage_transport_regexp*: manage transport regexps
+# - *$manage_virtual_regexp*: manage virtual regexps
+# - *$tls_fingerprint_digest*: fingerprint digest for tls policy class
+# - *$use_amavisd*: set to "yes" to configure amavis
+# - *$use_dovecot_lda*: include dovecot declaration at master.cf
+# - *$use_schleuder*: whether to include schleuder portion at master.cf
+# - *$use_sympa*: whether to include sympa portion at master.cf
+# - *$use_firma*: whether to include firma portion at master.cf
+# - *$use_mlmmj*: whether to include mlmmj portion at master.cf
+# - *$use_submission*: set to "yes" to enable submission section at master.cf
+# - *$use_smtps*: set to "yes" to enable smtps section at master.cf
+# - *$mastercf_tail*: set this for additional content to be added at the end of master.cf
+# - *$inet_interfaces*: which inet interface postfix should listen on
+# - *$myorigin*: sets postfix $myorigin configuration
 #
 # Example usage:
 #
 #   node "toto.example.com" {
-#     $postfix_smtp_listen = "192.168.1.10"
-#     include postfix
+#     class { 'postfix':
+#       smtp_listen => "192.168.1.10"
+#     }
 #   }
 #
-class postfix {
+class postfix(
+  $smtp_listen             = "127.0.0.1",
+  $root_mail_recipient     = "nobody",
+  $anon_sasl               = "no",
+  $manage_header_checks    = "no",
+  $manage_tls_policy       = "no",
+  $manage_transport_regexp = "no",
+  $manage_virtual_regexp   = "no",
+  $tls_fingerprint_digest  = 'sha1'
+  $use_amavisd             = "no",
+  $use_dovecot_lda         = "no",
+  $use_schleuder           = "no",
+  $use_sympa               = "no",
+  $use_firma               = "no",
+  $use_mlmmj               = "no",
+  $use_submission          = "no",
+  $use_smtps               = "no",
+  $mastercf_tail           = "",
+  $inet_interfaces         = 'all',
+  $myorigin                = $::fqdn
+) {
 
   # selinux labels differ from one distribution to another
   case $::operatingsystem {
@@ -33,65 +71,30 @@ class postfix {
     }
   }
 
-  # Default value for various options
-  case $postfix_smtp_listen {
-    "": { $postfix_smtp_listen = "127.0.0.1" }
-  }
-  case $root_mail_recipient {
-    "":   { $root_mail_recipient = "nobody" }
-  }
-  case $postfix_anon_sasl {
-    "":    { $postfix_anon_sasl = "no" }
-  }
-  case $postfix_manage_header_checks {
-    "":   { $postfix_manage_header_checks = "no" }
-  }
-  case $postfix_manage_tls_policy {
-    "":   { $postfix_manage_tls_policy = "no" }
-  }
-  case $postfix_use_amavisd {
-    "":   { $postfix_use_amavisd = "no" }
-  }
-  case $postfix_use_dovecot_lda {
-    "":   { $postfix_use_dovecot_lda = "no" }
-  }
-  case $postfix_use_schleuder {
-    "":   { $postfix_use_schleuder = "no" }
-  }
-  case $postfix_use_sympa {
-    "":   { $postfix_use_sympa = "no" }
-  }
-  case $postfix_mastercf_tail {
-    "":   { $postfix_mastercf_tail = "" }
-  }
-  case $postfix_inet_interfaces {
-    "": { $postfix_inet_interfaces = 'all' }
-  }
-  case $postfix_myorigin {
-    "": { $postfix_myorigin = $fqdn }
-  }
 
   # Bootstrap moduledir
   include common::moduledir
   module_dir{'postfix': }
 
   # Include optional classes
-  if $postfix_anon_sasl == 'yes' {
+  if $anon_sasl == 'yes' {
     include postfix::anonsasl
   }
-  if $postfix_manage_header_checks == 'yes' {
+  if $header_checks == 'yes' {
     include postfix::header_checks
   }
-  if $postfix_manage_tls_policy == 'yes' {
-    include postfix::tlspolicy
+  if $manage_tls_policy == 'yes' {
+    class { 'postfix::tlspolicy':
+      fingerprint_digest => $tls_fingerprint_digest,
+    }
   }
-  if $postfix_use_amavisd == 'yes' {
+  if $use_amavisd == 'yes' {
     include postfix::amavis
   }
-  if $postfix_manage_transport_regexp == 'yes' {
+  if $manage_transport_regexp == 'yes' {
     include postfix::transport_regexp
   }
-  if $postfix_manage_virtual_regexp == 'yes' {
+  if $manage_virtual_regexp == 'yes' {
     include postfix::virtual_regexp
   }
 
@@ -163,9 +166,9 @@ class postfix {
 
   # Default configuration parameters
   postfix::config {
-    "myorigin":   value => "${postfix_myorigin}";
+    "myorigin":   value => "${myorigin}";
     "alias_maps": value => "hash:/etc/aliases";
-    "inet_interfaces": value => "${postfix_inet_interfaces}";
+    "inet_interfaces": value => "${inet_interfaces}";
   }
 
   case $::operatingsystem {

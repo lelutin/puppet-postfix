@@ -15,7 +15,7 @@ Example usage:
 
   node "toto.example.com" {
 
-    include postfix
+    class { 'postfix': }
 
     postfix::mailalias { "postmaster":
       ensure => present,

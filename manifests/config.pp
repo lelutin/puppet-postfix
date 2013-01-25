@@ -18,7 +18,7 @@ Example usage:
 
   node "toto.example.com" {
 
-    include postfix
+    class { 'postfix': }
 
     postfix::config {
       "smtp_use_tls"            => "yes";
