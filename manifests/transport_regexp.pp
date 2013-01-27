@@ -3,7 +3,7 @@
 #
 # Manages Postfix transport_regexp by merging snippets shipped:
 # - in the module's files/transport_regexp.d/ or puppet:///files/etc/postfix/transport_regexp.d
-#   (the latter takes precedence if present); site-postfix module is supported
+#   (the latter takes precedence if present); site_postfix module is supported
 #   as well, see the source argument of file {"$postfix_transport_regexp_snippets_dir"
 #   bellow for details.
 # - via postfix::transport_regexp_snippet defines
@@ -34,8 +34,8 @@ class postfix::transport_regexp {
     group   => '0',
     mode    => '700',
     source  => [
-                "puppet:///modules/site-postfix/${fqdn}/transport_regexp.d",
-                "puppet:///modules/site-postfix/transport_regexp.d",
+                "puppet:///modules/site_postfix/${fqdn}/transport_regexp.d",
+                "puppet:///modules/site_postfix/transport_regexp.d",
                 "puppet:///files/etc/postfix/transport_regexp.d",
                 "puppet:///modules/postfix/transport_regexp.d",
                ],
