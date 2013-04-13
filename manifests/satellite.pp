@@ -33,7 +33,7 @@ class postfix::satellite(
     default: { $fqdn = "${valid_fqdn}" }
   }
 
-  class { 'postfix:
+  class { 'postfix':
     root_mail_recipient => $root_mail_recipient,
   }
 
