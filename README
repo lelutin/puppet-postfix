@@ -36,6 +36,14 @@ This is not supported anymore.
 Every such snippet much now be configured using the (respectively)
 postfix::header_checks_snippet and postfix::tlspolicy_snippet defines.
 
+Note: You will need to set a global Exec { path => '...' } to a proper pathing
+in your manifests, or you will experience some issues such as:
+
+err: Failed to apply catalog: Parameter unless failed: 'test "x$(postconf -h relay_domains)" == 'xlocalhost host.foo.com'' is not qualified and no path was specified. Please qualify the command or specify a path.
+
+See: http://www.puppetcookbook.com/posts/set-global-exec-path.html for more
+information about how to do this
+
 Postfix class configuration parameters
 --------------------------------------
 
