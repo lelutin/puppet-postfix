@@ -126,10 +126,14 @@ Example usage:
     }
 
 
+postfix::disable
+----------------
+If you include this class, the postfix package will be removed and the service
+stopped.
+
 
 postfix::hash
-=============
-
+-------------
 This can be used to create postfix hashed "map" files. It will create "${name}",
 and then build "${name}.db" using the "postmap" command. The map file can then
 be referred to using postfix::config.
@@ -153,7 +157,7 @@ Example usage:
 
 
 postfix::virtual
-================
+----------------
 Manages content of the /etc/postfix/virtual map
 
 Parameters:
@@ -181,7 +185,7 @@ Example usage:
     }
 
 postfix::mailalias
-==================
+------------------
 Wrapper around Puppet mailalias resource, provides newaliases executable.
 
 Parameters:
