@@ -1,12 +1,7 @@
+# remove postfix
 class postfix::disable {
-
-  service{'postfix':
-    ensure => stopped,
-    enable => false,
+  case $::operatingsystem {
+    debian: { include postfix::disable::debian }
+    default: { include postfix::disable::base }
   }
-  package{'postfix':
-    ensure => absent,
-    require => Service['postfix'],
-  }
-
 }
