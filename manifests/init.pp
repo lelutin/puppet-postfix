@@ -59,7 +59,7 @@ class postfix(
   case $::operatingsystem {
 
     RedHat, CentOS: {
-      case $::lsbmajdistrelease {
+      case $::operatingsystemmajrelease {
         "4":     { $postfix_seltype = "etc_t" }
         "5":     { $postfix_seltype = "postfix_etc_t" }
         default: { $postfix_seltype = undef }
@@ -143,7 +143,7 @@ class postfix(
     content => $::operatingsystem ? {
       Redhat => template("postfix/master.cf.redhat5.erb"),
       CentOS => template("postfix/master.cf.redhat5.erb"),
-      Debian => template("postfix/master.cf.debian-${::lsbdistcodename}.erb"),
+      Debian => template("postfix/master.cf.debian-${::operatingsystemmajrelease}.erb"),
       Ubuntu => template("postfix/master.cf.debian-etch.erb"),
     },
     seltype => $postfix_seltype,
