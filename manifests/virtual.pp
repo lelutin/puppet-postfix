@@ -34,9 +34,9 @@ Example usage:
 
 */
 define postfix::virtual ($ensure="present", $destination) {
-  line {"${name} ${destination}":
+  file_line {"${name} ${destination}":
     ensure => $ensure,
-    file   => "/etc/postfix/virtual",
+    path   => "/etc/postfix/virtual",
     line   => "${name} ${destination}",
     notify => Exec["generate /etc/postfix/virtual.db"],
     require => Package["postfix"],
