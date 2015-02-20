@@ -26,7 +26,7 @@
   -o smtpd_client_restrictions=permit_sasl_authenticated,reject
   -o milter_macro_daemon_name=ORIGINATING
 <% end %>
-#628       inet  n       -       -       -       -       qmqpd
+#628      inet  n       -       -       -       -       qmqpd
 pickup    fifo  n       -       -       60      1       pickup
 cleanup   unix  n       -       -       -       0       cleanup
 qmgr      fifo  n       -       n       300     1       qmgr
@@ -135,7 +135,7 @@ amavis unix - - - - 2 smtp
 <% end %>
 <% if use_dovecot_lda == 'yes' %>
 dovecot   unix  -       n       n       -       -       pipe
-  flags=DRhu user=vmail:vmail argv=/usr/lib/dovecot/deliver -f ${sender} -d ${user}@${nexthop} -n -m ${extension}  
+  flags=DRhu user=vmail:vmail argv=/usr/lib/dovecot/deliver -f ${sender} -d ${user}@${nexthop} -n -m ${extension}
 <% end %>
 <% if use_schleuder == 'yes' %>
 schleuder  unix  -       n       n       -       -       pipe
