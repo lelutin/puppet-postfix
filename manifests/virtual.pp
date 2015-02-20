@@ -12,7 +12,7 @@ Requires:
 - Class["postfix"]
 - Postfix::Hash["/etc/postfix/virtual"]
 - Postfix::Config["virtual_alias_maps"]
-- common::line (from module common)
+- file_line (from module stdlib)
 
 Example usage:
 
