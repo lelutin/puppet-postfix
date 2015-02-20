@@ -12,7 +12,7 @@ Requires:
 - Class["postfix"]
 - Postfix::Hash["/etc/postfix/transport"]
 - Postfix::Config["transport_maps"]
-- common::line (from module common)
+- file_line (from module stdlib)
 
 Example usage:
 
@@ -34,9 +34,9 @@ Example usage:
 
 */
 define postfix::transport ($ensure="present", $destination) {
-  line {"${name} ${destination}":
+  file_line {"${name} ${destination}":
     ensure => $ensure,
-    file   => "/etc/postfix/transport",
+    path   => "/etc/postfix/transport",
     line   => "${name} ${destination}",
     notify => Exec["generate /etc/postfix/transport.db"],
     require => Package["postfix"],
