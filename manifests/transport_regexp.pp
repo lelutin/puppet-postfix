@@ -22,7 +22,7 @@
 class postfix::transport_regexp {
 
   include common::moduledir
-  module_dir{'postfix/transport_regexp': }
+  common::module_dir{'postfix/transport_regexp': }
 
   $postfix_transport_regexp_dir          = "${common::moduledir::module_dir_path}/postfix/transport_regexp"
   $postfix_transport_regexp_snippets_dir = "${postfix_transport_regexp_dir}/transport_regexp.d"

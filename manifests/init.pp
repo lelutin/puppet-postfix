@@ -74,7 +74,7 @@ class postfix(
 
   # Bootstrap moduledir
   include common::moduledir
-  module_dir{'postfix': }
+  common::module_dir{'postfix': }
 
   # Include optional classes
   if $anon_sasl == 'yes' {
