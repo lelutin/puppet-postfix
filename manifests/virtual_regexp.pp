@@ -22,7 +22,7 @@
 class postfix::virtual_regexp {
 
   include common::moduledir
-  module_dir{'postfix/virtual_regexp': }
+  common::module_dir{'postfix/virtual_regexp': }
 
   $postfix_virtual_regexp_dir          = "${common::moduledir::module_dir_path}/postfix/virtual_regexp"
   $postfix_virtual_regexp_snippets_dir = "${postfix_virtual_regexp_dir}/virtual_regexp.d"

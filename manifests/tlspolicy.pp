@@ -16,7 +16,7 @@ class postfix::tlspolicy(
 ) {
 
   include common::moduledir
-  module_dir{'postfix/tls_policy': }
+  common::module_dir{'postfix/tls_policy': }
 
   $postfix_tlspolicy_dir          = "${common::moduledir::module_dir_path}/postfix/tls_policy"
   $postfix_merged_tlspolicy       = "${postfix_tlspolicy_dir}/merged_tls_policy"
