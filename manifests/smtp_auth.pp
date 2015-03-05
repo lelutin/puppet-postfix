@@ -27,11 +27,11 @@
 #  }
 
 define postfix::smtp_auth ($user, $password, $ensure=present) {
-  line { $name:
-    ensure  => $ensure,
-    file    => '/etc/postfix/smtp_auth',
-    line    => "${name} ${user}:${password}",
-    notify  => Exec['generate /etc/postfix/smtp_auth.db'],
-    require => Package['postfix'],
-  }
+  file_line { $name:
+      ensure  => $ensure,
+      path    => '/etc/postfix/smtp_auth',
+      line    => "${name} ${user}:${password}",
+      notify  => Exec['generate /etc/postfix/smtp_auth.db'],
+      require => Package['postfix'],
+    }
 }
