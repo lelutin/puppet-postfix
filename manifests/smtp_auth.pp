@@ -5,7 +5,7 @@
 # Requires:
 #   - Class["postfix"]
 #   - Postfix::Hash["/etc/postfix/smtp_auth"]
-#   - common::line (from module common)
+#   - file_line (from puppetlab's stdlib module)
 #
 # Example usage:
 #
