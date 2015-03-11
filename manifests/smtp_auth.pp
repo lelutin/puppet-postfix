@@ -16,7 +16,7 @@
 #    postfix::hash { '/etc/postfix/smtp_auth':
 #      ensure => present,
 #    }
-#    postfix::config { 'smpt_auth_maps':
+#    postfix::config { 'smtp_auth_maps':
 #      value => 'hash:/etc/postfix/smtp_auth'
 #    }
 #    postfix::smtp_auth { 'gmail.com':
