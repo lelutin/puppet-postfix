@@ -21,16 +21,16 @@
 #     }
 #   }
 #
+
 class postfix::satellite(
   $relayhost           = '',
-  $valid_fqdn          = '',
+  $valid_fqdn          = $::fqdn,
   $root_mail_recipient = ''
 ) {
 
-  # If $valid_fqdn exists, use it to override $fqdn
-  case $valid_fqdn {
-    "":      { $valid_fqdn = $::fqdn }
-    default: { $fqdn = "${valid_fqdn}" }
+  # If $valid_fqdn is provided, use it to override $fqdn
+  if $valid_fqdn != $::fdqn {
+    $fqdn = $valid_fqdn
   }
 
   class { 'postfix':
