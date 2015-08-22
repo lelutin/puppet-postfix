@@ -52,7 +52,8 @@ class postfix(
   $use_smtps               = "no",
   $mastercf_tail           = "",
   $inet_interfaces         = 'all',
-  $myorigin                = $::fqdn
+  $myorigin                = $::fqdn,
+  $default_alias_maps      = true
 ) {
 
   # selinux labels differ from one distribution to another
@@ -165,9 +166,13 @@ class postfix(
   }
 
   # Default configuration parameters
+  if $default_alias_maps {
+    postfix::config {
+      "alias_maps": value => "hash:/etc/aliases";
+    }
+  }
   postfix::config {
-    "myorigin":   value => "${myorigin}";
-    "alias_maps": value => "hash:/etc/aliases";
+    "myorigin":        value => "${myorigin}";
     "inet_interfaces": value => "${inet_interfaces}";
   }
 
