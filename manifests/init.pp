@@ -58,7 +58,7 @@ class postfix(
 
   case $::operatingsystem {
 
-    RedHat, CentOS: {
+    'RedHat', 'CentOS': {
       $master_cf_template = 'postfix/master.cf.redhat5.erb'
 
       # selinux labels differ from one distribution to another
@@ -66,6 +66,12 @@ class postfix(
         '4':     { $postfix_seltype = 'etc_t' }
         '5':     { $postfix_seltype = 'postfix_etc_t' }
         default: { $postfix_seltype = undef }
+      }
+
+      postfix::config {
+        'sendmail_path': value => '/usr/sbin/sendmail.postfix';
+        'newaliases_path': value => '/usr/bin/newaliases.postfix';
+        'mailq_path': value => '/usr/bin/mailq.postfix';
       }
     }
 
@@ -181,17 +187,6 @@ class postfix(
   postfix::config {
     'myorigin':        value => $myorigin;
     'inet_interfaces': value => $inet_interfaces;
-  }
-
-  case $::operatingsystem {
-    RedHat, CentOS: {
-      postfix::config {
-        'sendmail_path': value => '/usr/sbin/sendmail.postfix';
-        'newaliases_path': value => '/usr/bin/newaliases.postfix';
-        'mailq_path': value => '/usr/bin/mailq.postfix';
-      }
-    }
-    default: {}
   }
 
   postfix::mailalias {'root':
