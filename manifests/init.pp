@@ -34,23 +34,23 @@
 #   }
 #
 class postfix(
-  $smtp_listen             = "127.0.0.1",
-  $root_mail_recipient     = "nobody",
-  $anon_sasl               = "no",
-  $manage_header_checks    = "no",
-  $manage_tls_policy       = "no",
-  $manage_transport_regexp = "no",
-  $manage_virtual_regexp   = "no",
+  $smtp_listen             = '127.0.0.1',
+  $root_mail_recipient     = 'nobody',
+  $anon_sasl               = 'no',
+  $manage_header_checks    = 'no',
+  $manage_tls_policy       = 'no',
+  $manage_transport_regexp = 'no',
+  $manage_virtual_regexp   = 'no',
   $tls_fingerprint_digest  = 'sha1',
-  $use_amavisd             = "no",
-  $use_dovecot_lda         = "no",
-  $use_schleuder           = "no",
-  $use_sympa               = "no",
-  $use_firma               = "no",
-  $use_mlmmj               = "no",
-  $use_submission          = "no",
-  $use_smtps               = "no",
-  $mastercf_tail           = "",
+  $use_amavisd             = 'no',
+  $use_dovecot_lda         = 'no',
+  $use_schleuder           = 'no',
+  $use_sympa               = 'no',
+  $use_firma               = 'no',
+  $use_mlmmj               = 'no',
+  $use_submission          = 'no',
+  $use_smtps               = 'no',
+  $mastercf_tail           = '',
   $inet_interfaces         = 'all',
   $myorigin                = $::fqdn,
   $default_alias_maps      = true
@@ -61,8 +61,8 @@ class postfix(
 
     RedHat, CentOS: {
       case $::operatingsystemmajrelease {
-        "4":     { $postfix_seltype = "etc_t" }
-        "5":     { $postfix_seltype = "postfix_etc_t" }
+        '4':     { $postfix_seltype = 'etc_t' }
+        '5':     { $postfix_seltype = 'postfix_etc_t' }
         default: { $postfix_seltype = undef }
       }
     }
@@ -81,7 +81,8 @@ class postfix(
   if $anon_sasl == 'yes' {
     include postfix::anonsasl
   }
-  if $header_checks == 'yes' {
+  # this global variable needs to get parameterized as well
+  if $::header_checks == 'yes' {
     include postfix::header_checks
   }
   if $manage_tls_policy == 'yes' {
@@ -99,7 +100,7 @@ class postfix(
     include postfix::virtual_regexp
   }
 
-  package { ["postfix", "mailx"]:
+  package { ['postfix', 'mailx']:
     ensure => installed
   }
 
@@ -107,86 +108,87 @@ class postfix(
     Package[mailx] { name => 'bsd-mailx' }
   }
 
-  service { "postfix":
+  service { 'postfix':
     ensure  => running,
-    require => Package["postfix"],
+    require => Package['postfix'],
   }
 
-  file { "/etc/mailname":
+  file { '/etc/mailname':
     ensure  => present,
-    content => "${fqdn}\n",
+    content => "${::fqdn}\n",
     seltype => $postfix_seltype,
   }
 
   # Aliases
-  file { "/etc/aliases":
-    ensure => present,
+  file { '/etc/aliases':
+    ensure  => present,
     content => "# file managed by puppet\n",
     replace => false,
     seltype => $postfix_seltype,
-    notify => Exec["newaliases"],
+    notify  => Exec['newaliases'],
   }
 
   # Aliases
-  exec { "newaliases":
-    command     => "/usr/bin/newaliases",
+  exec { 'newaliases':
+    command     => '/usr/bin/newaliases',
     refreshonly => true,
-    require     => Package["postfix"],
-    subscribe   => File["/etc/aliases"],
+    require     => Package['postfix'],
+    subscribe   => File['/etc/aliases'],
   }
 
   # Config files
-  file { "/etc/postfix/master.cf":
+  file { '/etc/postfix/master.cf':
     ensure  => present,
-    owner => "root",
-    group => "root",
-    mode => "0644",
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0644',
     content => $::operatingsystem ? {
-      Redhat => template("postfix/master.cf.redhat5.erb"),
-      CentOS => template("postfix/master.cf.redhat5.erb"),
+      Redhat => template('postfix/master.cf.redhat5.erb'),
+      CentOS => template('postfix/master.cf.redhat5.erb'),
       Debian => template("postfix/master.cf.debian-${::operatingsystemmajrelease}.erb"),
-      Ubuntu => template("postfix/master.cf.debian-etch.erb"),
+      Ubuntu => template('postfix/master.cf.debian-etch.erb'),
     },
     seltype => $postfix_seltype,
-    notify  => Service["postfix"],
-    require => Package["postfix"],
+    notify  => Service['postfix'],
+    require => Package['postfix'],
   }
 
   # Config files
-  file { "/etc/postfix/main.cf":
+  file { '/etc/postfix/main.cf':
     ensure  => present,
-    owner => "root",
-    group => "root",
-    mode => "0644",
-    source  => "puppet:///modules/postfix/main.cf",
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0644',
+    source  => 'puppet:///modules/postfix/main.cf',
     replace => false,
     seltype => $postfix_seltype,
-    notify  => Service["postfix"],
-    require => Package["postfix"],
+    notify  => Service['postfix'],
+    require => Package['postfix'],
   }
 
   # Default configuration parameters
   if $default_alias_maps {
     postfix::config {
-      "alias_maps": value => "hash:/etc/aliases";
+      'alias_maps': value => 'hash:/etc/aliases';
     }
   }
   postfix::config {
-    "myorigin":        value => "${myorigin}";
-    "inet_interfaces": value => "${inet_interfaces}";
+    'myorigin':        value => $myorigin;
+    'inet_interfaces': value => $inet_interfaces;
   }
 
   case $::operatingsystem {
     RedHat, CentOS: {
       postfix::config {
-        "sendmail_path": value => "/usr/sbin/sendmail.postfix";
-        "newaliases_path": value => "/usr/bin/newaliases.postfix";
-        "mailq_path": value => "/usr/bin/mailq.postfix";
+        'sendmail_path': value => '/usr/sbin/sendmail.postfix';
+        'newaliases_path': value => '/usr/bin/newaliases.postfix';
+        'mailq_path': value => '/usr/bin/mailq.postfix';
       }
     }
+    default: {}
   }
 
-  postfix::mailalias {"root":
+  postfix::mailalias {'root':
     recipient => $root_mail_recipient,
   }
 }
