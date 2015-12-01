@@ -56,10 +56,12 @@ class postfix(
   $default_alias_maps      = true
 ) {
 
-  # selinux labels differ from one distribution to another
   case $::operatingsystem {
 
     RedHat, CentOS: {
+      $master_cf_template = 'postfix/master.cf.redhat5.erb'
+
+      # selinux labels differ from one distribution to another
       case $::operatingsystemmajrelease {
         '4':     { $postfix_seltype = 'etc_t' }
         '5':     { $postfix_seltype = 'postfix_etc_t' }
@@ -67,8 +69,17 @@ class postfix(
       }
     }
 
+    'Debian': {
+      $master_cf_template = "postfix/master.cf.debian-${::operatingsystemmajrelease}.erb"
+    }
+
+    'Ubuntu': {
+      $master_cf_template = 'postfix/master.cf.debian-sid.erb'
+    }
+
     default: {
-      $postfix_seltype = undef
+      $postfix_seltype    = undef
+      $master_cf_template = undef
     }
   }
 
@@ -142,12 +153,7 @@ class postfix(
     owner   => 'root',
     group   => 'root',
     mode    => '0644',
-    content => $::operatingsystem ? {
-      Redhat => template('postfix/master.cf.redhat5.erb'),
-      CentOS => template('postfix/master.cf.redhat5.erb'),
-      Debian => template("postfix/master.cf.debian-${::operatingsystemmajrelease}.erb"),
-      Ubuntu => template('postfix/master.cf.debian-etch.erb'),
-    },
+    content => template($master_cf_template),
     seltype => $postfix_seltype,
     notify  => Service['postfix'],
     require => Package['postfix'],
