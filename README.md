@@ -1,4 +1,5 @@
-= Postfix Puppet module
+Postfix Puppet module
+=====================
 
 This module will help install and configure postfix.
 
@@ -11,8 +12,18 @@ This module needs:
 !! Upgrade Notice (01/2013) !!
 
 This module now uses parameterized classes, where it used global variables
-before. So please whatch out before pulling, you need to change the 
+before. So please whatch out before pulling, you need to change the
 class declarations in your manifest !
+
+Issues
+------
+
+- Debian wheezy hosts (or below): If you get this error msg:
+
+    "Could not find template 'postfix/master.cf.debian-.erb' at /ssrv/leap/puppet/modules/postfix/manifests/init.pp:158 on node rew07plain1.rewire.org"
+
+  you need to use the facter package from wheezy-backports instead of the wheezy one. See https://gitlab.com/shared-puppet-modules-group/postfix/merge_requests/6#note_1892207 for more details.
+
 
 Deprecation notice
 ------------------
