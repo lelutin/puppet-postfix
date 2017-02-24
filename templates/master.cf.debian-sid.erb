@@ -148,7 +148,7 @@ amavis unix - - - - 2 smtp
 <% end %>
 <% if @use_dovecot_lda == 'yes' %>
 dovecot   unix  -       n       n       -       -       pipe
-  flags=DRhu user=vmail:vmail argv=/usr/lib/dovecot/deliver -f ${sender} -d ${user}@${nexthop} -n -m ${extension}
+  flags=DRhu user=vmail:vmail argv=/usr/lib/dovecot/deliver -f ${sender} -d ${user}@${nexthop} -m ${extension} -a "${recipient}"
 <% end %>
 <% if @use_schleuder == 'yes' %>
 schleuder  unix  -       n       n       -       -       pipe
