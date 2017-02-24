@@ -30,7 +30,7 @@ class postfix::tlspolicy(
 
   postfix::hash { '/etc/postfix/tls_policy':
     source    => "$postfix_merged_tlspolicy",
-    subscribe => File["$postfix_merged_tlspolicy"],
+    subscribe => Concat["$postfix_merged_tlspolicy"],
   }
 
   postfix::config {
